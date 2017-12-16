@@ -1,0 +1,21 @@
+{
+  "name": "discord-bot",
+  "version": "0.1.0",
+  "description": "Discord bot for private use",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r00t1000/discord-bot.git"
+  },
+  "author": "Jacob Jimenez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/r00t1000/discord-bot/issues"
+  },
+  "homepage": "https://github.com/r00t1000/discord-bot#readme",
+  "dependencies": {
+    "configstore": "^3.1.1",
+    "discord.io": "github:woor/discord.io#gateway_v6",
+    "twilio": "^3.6.5"
+  }
+}
