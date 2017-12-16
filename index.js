@@ -6,24 +6,29 @@
     Entry #4: Dec 15th 2017
 */
 
-// Discord setup
+console.log("Working...")
+
+// Bot Setup and Require's
 var request = require("request");
 var Discord = require("discord.io");
 var bot = new Discord.Client({
     autorun: true,
-    token: "******"
+    token: "#"
 });
 
-// Specific bot setup
+// Bot specific setup
 var discordPrefix = "!";
 var adminId = "110900955968475136";
+var generalId = 371795004034908161;
+var priceId = 391383992290508801;
 
 // Initial Boot Feedback
 bot.on('ready', function(event) {
-    console.log('Logged in as ' + bot.username + ' with ' + bot.id);
+    console.log('Logged in as ' + bot.username + ' with ' + bot.id + " at " + Date.now());
 });
 
-// Ending bot Feedback
+
+// Bot Termination Feedback
 bot.on('disconnect', function(errMsg, code) {
   if (errMsg) {
     console.log("Error! " + errMsg);
@@ -32,7 +37,6 @@ bot.on('disconnect', function(errMsg, code) {
   }
 });
 
-var generalId = 371795004034908161;
 
 // Commands
 bot.on('message', function(user, userID, channelID, message, event) {
@@ -83,7 +87,8 @@ bot.on('message', function(user, userID, channelID, message, event) {
         })
       }
 
-      if (message == discordPrefix + "price") {
+      // Deprecated
+      /*if (message == discordPrefix + "price") {
         var url = "https://www.cryptopia.co.nz/api/GetMarket/ETN_BTC";
         request({
             url: url,
@@ -99,7 +104,7 @@ bot.on('message', function(user, userID, channelID, message, event) {
             }
         })
 
-      }
+      }*/
 
       if (message == discordPrefix + "btcprice") {
 
@@ -126,13 +131,6 @@ bot.on('message', function(user, userID, channelID, message, event) {
         bot.sendMessage({
             to: channelID,
             message: "https://www.coinbase.com/join/51fd8a0773bafef3a100001f"
-        });
-      }
-
-      if (message == discordPrefix + "miners") {
-        bot.sendMessage({
-            to: channelID,
-            message: "A lot."
         });
       }
 
@@ -166,6 +164,26 @@ bot.on('message', function(user, userID, channelID, message, event) {
             to: channelID,
             message: "```!myid - Returns your user id\n!channelid - Returns current channel id\n!price - Returns current Electroneum price\n!btcprice - Returns current price for Bitcoin\n!reddit - Returns link to subreddit\n!website - Returns link to website\n!app - Returns links to Electroneum applications\n!miners - Returns amount of miners on the reddit pool```"
         });
+      }
+
+      // Automatic Commands
+      if (message == discordPrefix + "start_price" && userID == adminId) {
+        var interval = setInterval(function() {
+        console.log("Sending prices...")
+        var url = "https://www.cryptopia.co.nz/api/GetMarket/ETN_BTC";
+        request({
+            url: url,
+            json: true
+          }, function(error, response, body) {
+              if (!error && response.statusCode === 200) {
+                  var newPrice = body.Data;
+                  bot.sendMessage({
+                      to: channelID,
+                      message: "```Label: " + newPrice.Label + "\nAskPrice: " + newPrice.AskPrice + "\nBidPrice: " + newPrice.BidPrice + "\nOpen: " + newPrice.Open + "```"
+                  });
+              }
+          })
+        }, 30000)
       }
 
 });
